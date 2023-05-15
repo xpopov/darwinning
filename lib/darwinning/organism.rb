@@ -40,7 +40,7 @@ module Darwinning
         @genotypes = {}
         genes.each do |g|
           # make genotypes a hash with gene objects as keys
-          @genotypes[g] = g.express
+          @genotypes[g.name] = g.express
         end
       else
         @genotypes = genotypes
@@ -55,6 +55,21 @@ module Darwinning
 
     def genes
       self.class.genes
+    end
+
+    def ==(other)
+      # genotypes == other.genotypes
+      to_s == other.to_s
+    end
+
+    def eql?(other)
+      # genotypes == other.genotypes
+      to_s == other.to_s
+    end
+
+    def hash
+      # genotypes.values.hash
+      to_s.hash
     end
   end
 

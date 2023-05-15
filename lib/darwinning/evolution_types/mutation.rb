@@ -20,11 +20,13 @@ module Darwinning
 
       def mutate(members)
         members.map do |member|
-          if rand < mutation_rate
-            re_express_random_genotype(member)
-          else
-            member
+          # Run mutation for every gene
+          member.genes.each do |gene|
+            if rand < mutation_rate
+              member = re_express_random_genotype(member)
+            end
           end
+          member
         end
       end
 
@@ -33,11 +35,14 @@ module Darwinning
         random_index = rand(member.genotypes.length)
         gene = member.genes[random_index]
 
+        value = gene.express
         if member.class.superclass == Darwinning::Organism
-          member.genotypes[gene] = gene.express
+          # puts "Mutate #{gene.name} = #{value}"
+          member.genotypes[gene.name] = value
         else
-          member.send("#{gene.name}=", gene.express)
+          member.send("#{gene.name}=", value)
         end
+        # puts member.to_s
 
         member
       end

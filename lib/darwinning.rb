@@ -33,7 +33,8 @@ module Darwinning
     private
 
     def base.has_gene_ranges?
-      self.constants.include?(:GENE_RANGES)
+      # self.constants.include?(:GENE_RANGES)
+      self.instance_methods.include?(:possible_genes)
     end
 
     def base.has_fitness_method?

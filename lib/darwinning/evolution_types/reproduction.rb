@@ -7,6 +7,7 @@ module Darwinning
       #   :random_swap
       def initialize(options = {})
         @crossover_method = options.fetch(:crossover_method, :alternating_swap)
+        @organism_options = options.fetch(:organism_options, {})
       end
 
       def evolve(m1, m2)
@@ -32,12 +33,12 @@ module Darwinning
       end
 
       def new_member_from_genotypes(organism_klass, genotypes)
-        new_member = organism_klass.new
+        new_member = organism_klass.new(@organism_options)
         if organism_klass.superclass == Darwinning::Organism
           new_member.genotypes = genotypes
         else
           new_member.genes.each do |gene|
-            new_member.send("#{gene.name}=", genotypes[gene])
+            new_member.send("#{gene.name}=", genotypes[gene.name])
           end
         end
         new_member
@@ -49,11 +50,11 @@ module Darwinning
 
         m1.genes.each_with_index do |gene, i|
           if i % 2 == 0
-            genotypes1[gene] = m1.genotypes[gene]
-            genotypes2[gene] = m2.genotypes[gene]
+            genotypes1[gene.name] = m1.genotypes[gene.name]
+            genotypes2[gene.name] = m2.genotypes[gene.name]
           else
-            genotypes1[gene] = m2.genotypes[gene]
-            genotypes2[gene] = m1.genotypes[gene]
+            genotypes1[gene.name] = m2.genotypes[gene.name]
+            genotypes2[gene.name] = m1.genotypes[gene.name]
           end
         end
 
@@ -68,8 +69,8 @@ module Darwinning
           g1_parent = [m1,m2].sample
           g2_parent = [m1,m2].sample
 
-          genotypes1[gene] = g1_parent.genotypes[gene]
-          genotypes2[gene] = g2_parent.genotypes[gene]
+          genotypes1[gene.name] = g1_parent.genotypes[gene.name]
+          genotypes2[gene.name] = g2_parent.genotypes[gene.name]
         end
 
         [genotypes1, genotypes2]
